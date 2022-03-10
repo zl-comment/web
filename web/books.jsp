@@ -188,6 +188,7 @@
 
     </table>
 
+<%--
 
     <div class="pagin">
         <div class="message">共<i class="blue">${page.pageCount}</i>条记录，当前显示第&nbsp;<i class="blue">${page.currentPage}</i>页</div>
@@ -195,32 +196,74 @@
 
 
             <li class="paginItem"><a href="javascript:;"><span class="pagepre"></span></a></li>
+--%>
 
 
 
 
+
+            <div class="pagin">
+                <div class="message">共<i class="blue">${page.dataCount}</i>条记录，共<i class="blue">${page.pageCount}</i>页，当前显示第&nbsp;<i class="blue">${page.currentPage}&nbsp;</i>页</div>
+                <ul class="paginList">
+                    <c:if test="${page.currentPage>1}">
+                        <li class="paginItem"><a href="BookServlet?method=getBooks&currentPage=${page.currentPage-1}&&name=${name}&&state=${state}&&booktypeid=${booktypeid}"><span class="pagepre"></span> </a> </li>
+                    </c:if>
+
+                    <c:forEach var="num" begin="1" end="${page.pageCount}">
+                        <c:set var="flag" value="false"></c:set>
+                        <c:if test="${num == page.currentPage}">
+                            <c:set var="flag" value="true"></c:set>
+                            <li class="paginItem current"><a>${num}</a></li>
+                        </c:if>
+                        <c:if test="${flag == false}">
+                            <li class="paginItem"><a href="BookServlet?method=getBooks&currentPage=${num}&&name=${name}&&state=${state}&&booktypeid=${booktypeid}">${num}</a></li>
+                        </c:if>
+
+                    </c:forEach>
+
+                    <c:if test="${page.currentPage<page.pageCount}">
+                        <li class="paginItem"><a href="BookServlet?method=getBooks&currentPage=${page.currentPage+1}&name=${name}&&state=${state}&&booktypeid=${booktypeid}"><span class="pagenxt"></span> </a> </li>
+                    </c:if>
+                </ul>
+            </div>
+
+
+
+
+
+
+
+        <%--
 
             <c:forEach var="num" begin="1"  end="${page.pageCount}" >
 
-
-
                 <li class="paginItem"><a href="BookServlet?method=getBooks&&currentPage=${num}&&state=${state}&&booktypeid=${booktypeid}&&name=${name}">${num}</a></li>
 
-
-
             </c:forEach>
+--%>
 
 
 
 
+        <%--    <c:forEach items="${bookTypes}"  var="bookType">
+                <c:set var="flag" value="false"> </c:set>
 
+                <c:if test="${booktypeid==bookType.id}">
+                    <c:set var="flag" value="ture"> </c:set>
+                    <option value="${bookType.id}" selected class="selected">${bookType.typename}</option>
+                </c:if>
+
+                <c:if test="${booktypeid!=bookType.id&&flag==false}">
+                    <option value="${bookType.id}" >${bookType.typename}</option>
+                </c:if>
+            </c:forEach>--%>
 
 
 
            <%-- <li class="paginItem current"><a href="javascript:;">2</a></li>--%>
-            <li class="paginItem"><a href="javascript:;"><span class="pagenxt"></span></a></li>
+  <%--          <li class="paginItem"><a href="javascript:;"><span class="pagenxt"></span></a></li>
         </ul>
-    </div>
+    </div>--%>
 
 
 
