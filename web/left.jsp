@@ -49,7 +49,6 @@
         <ul class="menuson">
             <li><cite></cite><a href="index.jsp" target="rightFrame">首页模版</a><i></i></li>
             <li class="active"><cite></cite><a href="AdminServlet?method=getAdmins" target="rightFrame">管理员列表</a><i></i></li>
-            <li><cite></cite><a href="filelist.jsp" target="rightFrame">信息管理</a><i></i></li>
             <li><cite></cite><a href="addadmin.jsp" target="rightFrame">管理员添加</a><i></i></li>
             <li><cite></cite><a href="error.jsp" target="rightFrame">404页面</a><i></i></li>
         </ul>
@@ -73,17 +72,6 @@
             <li><cite></cite><a href="BookServlet?method=getBooks" target="rightFrame">图书列表</a><i></i></li>
 
         </ul>
-    </dd>
-
-
-    <dd><div class="title"><span><img src="images/leftico04.png" /></span>日期管理</div>
-        <ul class="menuson">
-            <li><cite></cite><a href="#" target="rightFrame">自定义</a><i></i></li>
-            <li><cite></cite><a href="#" target="rightFrame">常用资料</a><i></i></li>
-            <li><cite></cite><a href="#" target="rightFrame">信息列表</a><i></i></li>
-            <li><cite></cite><a href="#" target="rightFrame">其他</a><i></i></li>
-        </ul>
-
     </dd>
 
 </dl>

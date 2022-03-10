@@ -3,6 +3,7 @@ package com.zx.dao.impl;
 
 
 import com.zx.beans.BookType;
+import com.zx.beans.Page;
 import com.zx.dao.BookTypeDao;
 import com.zx.util.JDBCUtil;
 
@@ -93,6 +94,67 @@ public class BookTypeDaoImpl implements BookTypeDao {
     }
 
 
+    @Override
+    public int getTypeCount() {
+
+        Connection connection=null;
+        try {
+
+            connection= JDBCUtil.getConnection();
+            String sql="select count(id) num from t_booktype";
+            PreparedStatement ps= connection.prepareStatement(sql);
 
 
+            ResultSet resultSet=ps.executeQuery();
+            while (resultSet.next()){
+               return resultSet.getInt("num");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            JDBCUtil.close(connection);
+        }
+        return 0;
+    }
+
+    @Override
+    public Page<BookType> getTypesByPage(int currentPage, int pageSize) {
+        Page<BookType> page=new Page<>();
+        ArrayList<BookType> bookTypes=new ArrayList<>();
+        Connection connection=null;
+        try {
+
+            connection= JDBCUtil.getConnection();
+            String sql="select * from t_booktype Limit ?,?";
+            PreparedStatement ps= connection.prepareStatement(sql);
+          ps.setInt(1,(currentPage-1)*pageSize);
+          ps.setInt(2,pageSize);
+
+            ResultSet resultSet=ps.executeQuery();
+            while (resultSet.next()){
+                int id=resultSet.getInt("id");
+                String typename=resultSet.getString("typename");
+                String typecontent=resultSet.getString("typecontent");
+
+
+                bookTypes.add(new BookType(id,typename,typecontent));
+            }
+            page.setDatas(bookTypes);
+            page.setCurrentPage(currentPage);
+            page.setPageSize(pageSize);
+            int dataCount=this.getTypeCount();
+            page.setDataCount(dataCount);
+            page.setPageCount(dataCount%pageSize==0?(dataCount/pageSize):((dataCount/pageSize)+1));
+
+
+
+            return page;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            JDBCUtil.close(connection);
+        }
+        return null;
+    }
 }

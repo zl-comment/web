@@ -77,13 +77,13 @@
             <th>编号<i class="sort"><img src="images/px.gif" /></i></th>
             <th>类型名称</th>
             <th>类型简介</th>
-            <th>角色</th>
+            <th>操作</th>
             <th></th>
         </tr>
         </thead>
 
         <tbody>
-        <c:forEach items="${bookTypes}" var="booktype"  varStatus="num">
+        <c:forEach items="${page.datas}" var="booktype"  varStatus="num">
             <tr>
                 <td><input name="" type="checkbox" value="" /></td>
                 <td>${num.index+1}</td>
@@ -102,16 +102,27 @@
         <div class="message">共<i class="blue">1256</i>条记录，当前显示第&nbsp;<i class="blue">2&nbsp;</i>页</div>
         <ul class="paginList">
             <li class="paginItem"><a href="javascript:;"><span class="pagepre"></span></a></li>
-            <li class="paginItem"><a href="javascript:;">1</a></li>
-            <li class="paginItem current"><a href="javascript:;">2</a></li>
-            <li class="paginItem"><a href="javascript:;">3</a></li>
-            <li class="paginItem"><a href="javascript:;">4</a></li>
-            <li class="paginItem"><a href="javascript:;">5</a></li>
-            <li class="paginItem more"><a href="javascript:;">...</a></li>
-            <li class="paginItem"><a href="javascript:;">10</a></li>
+
+
+
+            <c:forEach var="num" begin="1" end="${page.pageCount}">
+
+                <li class="paginItem"><a href="BookTypeServlet?method=getTypes&&currentPage=${num}">${num}</a></li>
+
+            </c:forEach>
+
+
+
+
+
+
+          <%--  <li class="paginItem current"><a href="javascript:;">2</a></li>--%>
+
             <li class="paginItem"><a href="javascript:;"><span class="pagenxt"></span></a></li>
         </ul>
     </div>
+
+
 
 
     <div class="tip">

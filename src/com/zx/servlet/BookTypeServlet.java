@@ -1,6 +1,7 @@
 package com.zx.servlet;
 
 import com.zx.beans.BookType;
+import com.zx.beans.Page;
 import com.zx.dao.BookTypeDao;
 import com.zx.dao.impl.BookTypeDaoImpl;
 import org.omg.CORBA.ARG_IN;
@@ -34,15 +35,18 @@ public class BookTypeServlet extends BaseServlet {
     }
 
     public void getTypes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        String currentPage=request.getParameter("currentPage");
         BookTypeDao bookTypeDao=new BookTypeDaoImpl();
-     ArrayList<BookType> bookTypes= bookTypeDao.getTypes();
+
+        if(currentPage==null){
+            currentPage="1";
+        }
+
+     Page<BookType> page= bookTypeDao.getTypesByPage(Integer.parseInt(currentPage),3);
 
 
-     request.setAttribute("bookTypes",bookTypes);
+     request.setAttribute("page",page);
      request.getRequestDispatcher("/types.jsp").forward(request,response);
-
-
 
     }
 }
