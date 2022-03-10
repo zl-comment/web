@@ -6,6 +6,7 @@ import com.jspsmart.upload.SmartUploadException;
 import com.zx.beans.Book;
 import com.zx.beans.BookType;
 
+import com.zx.beans.Page;
 import com.zx.dao.BookDao;
 import com.zx.dao.BookTypeDao;
 
@@ -123,17 +124,34 @@ public class BookServlet extends BaseServlet {
         getBooks(request,response);
     }
     public void getBooks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-            BookDao bookDao=new BookDaoImpl();
-          ArrayList<Book> books= bookDao.getBooks();
-        BookTypeDao bookTypeDao=new BookTypeDaoImpl();
-        List<BookType> bookTypes=bookTypeDao.getTypes();
+        String currentPage=request.getParameter("currentPage");
+        //换页时再启用查询
+        String name=request.getParameter("name");
+        String state=request.getParameter("state");
+        String booktypeid=request.getParameter("booktypeid");
+
+        if(name!=null||state!=null||booktypeid!=null){   //如果选择项被选中，说明有查询操作
+            this.search(request,response);
+        }else {
 
 
+            BookDao bookDao = new BookDaoImpl();
+            if (currentPage == null) {
+                currentPage = "1";
+            }
+            Page<Book> page = bookDao.getByPage(Integer.parseInt(currentPage), 5);
 
 
-        request.setAttribute("bookTypes",bookTypes);
-        request.setAttribute("books",books);
-        request.getRequestDispatcher("/books.jsp").forward(request,response);
+            BookTypeDao bookTypeDao = new BookTypeDaoImpl();
+            List<BookType> bookTypes = bookTypeDao.getTypes();
+            request.setAttribute("bookTypes", bookTypes);
+            request.setAttribute("page", page);
+            //以下两个是为了给与一开始选项
+            request.setAttribute("state", "0");
+            request.setAttribute("booktypeid", "0");
+
+            request.getRequestDispatcher("/books.jsp").forward(request, response);
+        }
 
     }
 
@@ -243,30 +261,44 @@ public class BookServlet extends BaseServlet {
 
     }
     public void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    String currentPage=request.getParameter("currentPage");
     String name=request.getParameter("name");
     String state=request.getParameter("state");
+        System.out.println(state);
     String booktypeid=request.getParameter("booktypeid");
 
 
 
+    if(currentPage==null){
+        currentPage="1";
+    }
+
+
 
     BookDao bookDao=new BookDaoImpl();
-      List<Book>  books= bookDao.search(name,Integer.parseInt(state),Integer.parseInt(booktypeid));
-
+      Page<Book>  page= bookDao.searchByPage(name,Integer.parseInt(state),Integer.parseInt(booktypeid),Integer.parseInt(currentPage),5);
 
 
 
         BookTypeDao bookTypeDao=new BookTypeDaoImpl();
         List<BookType> bookTypes=bookTypeDao.getTypes();
 
+
+
+
+        //传选项的类型
         request.setAttribute("bookTypes",bookTypes);
-           request.setAttribute("books",books);
+        //传每页的数据以及页数等
+           request.setAttribute("page",page);
+
+           //第一次搜索后将选项的值放到页面，再被getBooks获得，这样可以固定选项值，也可以分页
         request.setAttribute("name",name);
+        request.setAttribute("state",state);
+        request.setAttribute("booktypeid",booktypeid);
 
         request.getRequestDispatcher("/books.jsp").forward(request,response);
 
     }
-
 
 
 }

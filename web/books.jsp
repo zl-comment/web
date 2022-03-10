@@ -67,17 +67,50 @@
         <input name="name" type="text" class="dfinput"  value="${name}"  placeholder="请输入图书名称...."   style=" width: 200px"/>
 
 
-              <select class="select1" name="state">
-                  <option value="0">==请选择状态==</option>
-                  <option value="1">上架</option>
-                  <option value="2">下架</option>
-                  <option value="3">热销</option>
-              </select>
+
+            <select class="select1" name="state">
+
+                <c:if test="${state==0}">
+                    <option value="0" selected class="selected">==请选择状态==</option>
+                    <option value="1" >上架</option>
+                    <option value="2" >下架</option>
+                    <option value="3" >热销</option>
+                </c:if>
+
+                <c:if test="${state==1}">
+                    <option value="0">==请选择状态==</option>
+                    <option value="1" selected class="selected">上架</option>
+                    <option value="2" >下架</option>
+                    <option value="3" >热销</option>
+                </c:if>
+                <c:if test="${state==2}">
+                    <option value="0">==请选择状态==</option>
+                    <option value="1" >上架</option>
+                    <option value="2" selected class="selected">下架</option>
+                    <option value="3" >热销</option>
+                </c:if>
+                <c:if test="${state==3}">
+                    <option value="0">==请选择状态==</option>
+                    <option value="1" >上架</option>
+                    <option value="2" >下架</option>
+                    <option value="3" selected class="selected">热销</option>
+                </c:if>
+            </select>
+
 
                     <select class="select1" name="booktypeid">
                         <option value="0">==请选择类型==</option>
                         <c:forEach items="${bookTypes}"  var="bookType">
-                            <option value="${bookType.id}" >${bookType.typename}</option>
+                            <c:set var="flag" value="false"> </c:set>
+
+                            <c:if test="${booktypeid==bookType.id}">
+                                <c:set var="flag" value="ture"> </c:set>
+                                <option value="${bookType.id}" selected class="selected">${bookType.typename}</option>
+                            </c:if>
+
+                            <c:if test="${booktypeid!=bookType.id&&flag==false}">
+                                <option value="${bookType.id}" >${bookType.typename}</option>
+                            </c:if>
                         </c:forEach>
                     </select>
 
@@ -121,8 +154,9 @@
         </tr>
         </thead>
 
+        <%--每页的图书--%>
         <tbody>
-        <c:forEach items="${books}" var="book"  varStatus="num">
+        <c:forEach items="${page.datas}" var="book"  varStatus="num">
             <tr>
                 <td><input name="" type="checkbox" value="" /></td>
                 <td>${num.index+1}</td>
@@ -156,19 +190,40 @@
 
 
     <div class="pagin">
-        <div class="message">共<i class="blue">1256</i>条记录，当前显示第&nbsp;<i class="blue">2&nbsp;</i>页</div>
+        <div class="message">共<i class="blue">${page.pageCount}</i>条记录，当前显示第&nbsp;<i class="blue">${page.currentPage}</i>页</div>
         <ul class="paginList">
+
+
             <li class="paginItem"><a href="javascript:;"><span class="pagepre"></span></a></li>
-            <li class="paginItem"><a href="javascript:;">1</a></li>
-            <li class="paginItem current"><a href="javascript:;">2</a></li>
-            <li class="paginItem"><a href="javascript:;">3</a></li>
-            <li class="paginItem"><a href="javascript:;">4</a></li>
-            <li class="paginItem"><a href="javascript:;">5</a></li>
-            <li class="paginItem more"><a href="javascript:;">...</a></li>
-            <li class="paginItem"><a href="javascript:;">10</a></li>
+
+
+
+
+
+            <c:forEach var="num" begin="1"  end="${page.pageCount}" >
+
+
+
+                <li class="paginItem"><a href="BookServlet?method=getBooks&&currentPage=${num}&&state=${state}&&booktypeid=${booktypeid}&&name=${name}">${num}</a></li>
+
+
+
+            </c:forEach>
+
+
+
+
+
+
+
+
+           <%-- <li class="paginItem current"><a href="javascript:;">2</a></li>--%>
             <li class="paginItem"><a href="javascript:;"><span class="pagenxt"></span></a></li>
         </ul>
     </div>
+
+
+
 
 
     <div class="tip">

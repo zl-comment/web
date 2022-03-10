@@ -9,6 +9,7 @@ public interface BookTypeDao {
     void addType(BookType bookType);
 
     ArrayList<BookType>  getTypes();
+
           BookType getTypeById(int id);
 
 
